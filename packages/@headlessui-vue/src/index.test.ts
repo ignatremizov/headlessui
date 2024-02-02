@@ -53,6 +53,7 @@ it('should expose the correct components', () => {
     // Portal
     'Portal',
     'PortalGroup',
+    'provideUseId',
 
     // RadioGroup
     'RadioGroup',

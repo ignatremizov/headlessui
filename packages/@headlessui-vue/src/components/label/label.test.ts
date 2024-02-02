@@ -102,9 +102,11 @@ it('should be possible to update a prop from the parent and it should reflect in
 
   await new Promise<void>(nextTick)
 
-  expect(format(container.firstElementChild)).toMatchSnapshot()
+  let label = container.querySelector('label')!
+
+  expect(label.dataset.count).toEqual('0')
 
   await click(getByText('+1'))
 
-  expect(format(container.firstElementChild)).toMatchSnapshot()
+  expect(label.dataset.count).toEqual('1')
 })
