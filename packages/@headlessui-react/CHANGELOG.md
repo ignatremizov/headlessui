@@ -359,6 +359,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped to React and React DOM 18
 - Dialog is focused by default instead of the first focusable element (unless an element exists with a `data-autofocus` in the dialog)
 
+### Fixed
+
+- Make sure panels re-register when IDs are calculated in React < 18 ([#2883](https://github.com/tailwindlabs/headlessui/pull/2883))
+
 ## [1.7.18] - 2024-01-08
 
 ### Fixed
