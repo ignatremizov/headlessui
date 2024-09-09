@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cleanup `process` in Combobox component when using virtualization ([#3495](https://github.com/tailwindlabs/headlessui/pull/3495))
 - Ensure outside click properly works when clicking SVG elements ([#3777](https://github.com/tailwindlabs/headlessui/pull/3777))
 - Support `<summary>` as a focusable element inside `<details>` ([#3389](https://github.com/tailwindlabs/headlessui/pull/3389))
+
+## [1.7.23] - 2024-09-09
+
+### Fixed
+
 - use native `useId` from Vue.js 3.5 when available ([#3458](https://github.com/tailwindlabs/headlessui/pull/3458))
 
 ## [1.7.22] - 2024-05-08
@@ -552,7 +557,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Everything!
 
-[unreleased]: https://github.com/tailwindlabs/headlessui/compare/@headlessui/vu@v1.7.22...HEAD
+[unreleased]: https://github.com/tailwindlabs/headlessui/compare/@headlessui/vue@v1.7.23...HEAD
+[1.7.23]: https://github.com/tailwindlabs/headlessui/compare/@headlessui/vue@v1.7.22...@headlessui/vue@v1.7.23
 [1.7.22]: https://github.com/tailwindlabs/headlessui/compare/@headlessui/vue@v1.7.21...@headlessui/vue@v1.7.22
 [1.7.21]: https://github.com/tailwindlabs/headlessui/compare/@headlessui/vue@v1.7.20...@headlessui/vue@v1.7.21
 [1.7.20]: https://github.com/tailwindlabs/headlessui/compare/@headlessui/vue@v1.7.19...@headlessui/vue@v1.7.20
