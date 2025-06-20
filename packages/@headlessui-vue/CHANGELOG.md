@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `immediate` prop to `Combobox` for immediately opening the Combobox when the `input` receives focus ([#2686](https://github.com/tailwindlabs/headlessui/pull/2686))
 - Add `virtual` prop to `Combobox` component ([#2779](https://github.com/tailwindlabs/headlessui/pull/2779))
 - Allow users customize ID generation ([#2959](https://github.com/tailwindlabs/headlessui/pull/2959))
+- Add `cleanupRoot` prop to `Portal` to control portal-root cleanup on unmount (defaults to `true`; set to `false` to keep the root mounted)
 
 ### Fixed
 

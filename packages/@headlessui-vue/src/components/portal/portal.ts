@@ -1,6 +1,5 @@
 import {
   Teleport,
-  computed,
   defineComponent,
   getCurrentInstance,
   h,
@@ -69,10 +68,10 @@ export let Portal = defineComponent({
   name: 'Portal',
   props: {
     as: { type: [Object, String], default: 'div' },
+    cleanupRoot: { type: Boolean, default: true },
   },
   setup(props, { slots, attrs }) {
     let element = ref<HTMLElement | null>(null)
-    let ownerDocument = computed(() => getOwnerDocument(element))
 
     let forcePortalRoot = usePortalRoot()
     let groupContext = inject(PortalGroupContext, null)
@@ -117,7 +116,9 @@ export let Portal = defineComponent({
     })
 
     onUnmounted(() => {
-      let root = ownerDocument.value?.getElementById('headlessui-portal-root')
+      if (!props.cleanupRoot) return
+
+      let root = getOwnerDocument(element)?.getElementById('headlessui-portal-root')
       if (!root) return
       if (myTarget.value !== root) return
 
@@ -138,6 +139,7 @@ export let Portal = defineComponent({
       if (!ready.value) return null
       if (myTarget.value === null) return null
 
+      let { cleanupRoot: _, ...theirProps } = props
       let ourProps = {
         ref: element,
         'data-headlessui-portal': '',
@@ -150,7 +152,7 @@ export let Portal = defineComponent({
         { to: myTarget.value },
         render({
           ourProps,
-          theirProps: props,
+          theirProps,
           slot: {},
           attrs,
           slots,
