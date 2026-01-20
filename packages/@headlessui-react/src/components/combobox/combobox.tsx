@@ -8,6 +8,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -94,6 +95,10 @@ import {
   useComboboxMachine,
   useComboboxMachineContext,
 } from './combobox-machine-glue'
+
+export type ComboboxHandle = {
+  close: () => void
+}
 
 let ComboboxDataContext = createContext<{
   value: unknown
@@ -279,6 +284,7 @@ export type ComboboxProps<
     } | null
 
     onClose?: () => void
+    apiRef?: Ref<ComboboxHandle | null>
 
     __demoMode?: boolean
   }
@@ -301,6 +307,7 @@ function ComboboxFn<TValue, TTag extends ElementType = typeof DEFAULT_COMBOBOX_T
     invalid = false,
     disabled = providedDisabled || false,
     onClose: theirOnClose,
+    apiRef,
     __demoMode = false,
     multiple = false,
     immediate = false,
@@ -318,6 +325,8 @@ function ComboboxFn<TValue, TTag extends ElementType = typeof DEFAULT_COMBOBOX_T
   )
 
   let machine = useComboboxMachine({ id, virtual, __demoMode })
+
+  useImperativeHandle(apiRef, () => ({ close: () => machine.actions.closeCombobox() }), [machine])
 
   let optionsPropsRef = useRef<_Data['optionsPropsRef']['current']>({ static: false, hold: false })
 

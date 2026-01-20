@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react'
+import { act, render, waitFor } from '@testing-library/react'
 import React, { Fragment, createElement, useEffect, useState } from 'react'
 import {
   ComboboxMode,
@@ -48,6 +48,7 @@ import {
   ComboboxInput,
   ComboboxOption,
   ComboboxOptions,
+  type ComboboxHandle,
 } from './combobox'
 
 let NOOP = () => {}
@@ -5907,6 +5908,95 @@ describe('transitions', () => {
 
       // Ensure the input got the restored focus
       assertActiveElement(getComboboxInput())
+    })
+  )
+})
+
+describe('Imperative API', () => {
+  it(
+    'should be possible to close the Combobox via apiRef.close()',
+    suppressConsoleLogs(async () => {
+      let closeHandler = jest.fn()
+      let comboboxRef: React.RefObject<ComboboxHandle | null> = { current: null }
+
+      render(
+        <Combobox apiRef={comboboxRef} onClose={closeHandler}>
+          <ComboboxInput />
+          <ComboboxButton>Toggle</ComboboxButton>
+          <ComboboxOptions>
+            <ComboboxOption value="alice">Alice</ComboboxOption>
+            <ComboboxOption value="bob">Bob</ComboboxOption>
+          </ComboboxOptions>
+        </Combobox>
+      )
+
+      // Open the combobox
+      await click(getComboboxButton())
+
+      // Verify it is open
+      assertComboboxList({ state: ComboboxState.Visible })
+
+      // Close via ref
+      expect(closeHandler).toHaveBeenCalledTimes(0)
+      act(() => comboboxRef.current?.close())
+      expect(closeHandler).toHaveBeenCalledTimes(1)
+
+      // Verify it is closed
+      assertComboboxList({ state: ComboboxState.InvisibleUnmounted })
+    })
+  )
+
+  it(
+    'should call onClose when calling close() on an already closed Combobox',
+    suppressConsoleLogs(async () => {
+      let closeHandler = jest.fn()
+      let comboboxRef: React.RefObject<ComboboxHandle | null> = { current: null }
+
+      render(
+        <Combobox apiRef={comboboxRef} onClose={closeHandler}>
+          <ComboboxInput />
+          <ComboboxButton>Toggle</ComboboxButton>
+          <ComboboxOptions>
+            <ComboboxOption value="alice">Alice</ComboboxOption>
+          </ComboboxOptions>
+        </Combobox>
+      )
+
+      // Verify it is closed
+      assertComboboxList({ state: ComboboxState.InvisibleUnmounted })
+
+      // Try to close via ref - this calls onClose even if already closed
+      // (matching existing behavior in the machine)
+      act(() => comboboxRef.current?.close())
+      expect(closeHandler).toHaveBeenCalledTimes(1)
+
+      // Should still be closed
+      assertComboboxList({ state: ComboboxState.InvisibleUnmounted })
+    })
+  )
+
+  it(
+    'should still forward the root element via ref',
+    suppressConsoleLogs(() => {
+      let elementRef: HTMLDivElement | null = null
+
+      render(
+        <Combobox
+          as="div"
+          ref={(element) => (elementRef = element as HTMLDivElement | null)}
+          data-testid="combobox-root"
+        >
+          <ComboboxInput />
+          <ComboboxButton>Toggle</ComboboxButton>
+          <ComboboxOptions>
+            <ComboboxOption value="alice">Alice</ComboboxOption>
+          </ComboboxOptions>
+        </Combobox>
+      )
+
+      let root = document.querySelector('[data-testid="combobox-root"]')
+
+      expect(elementRef).toBe(root)
     })
   )
 })
