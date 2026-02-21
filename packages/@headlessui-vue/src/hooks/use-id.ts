@@ -3,17 +3,17 @@ import * as Vue from 'vue'
 let GENERATE_ID: Vue.InjectionKey<() => string> = Symbol('headlessui.useid')
 let globalId = 0
 
-export const useId =
-  // Prefer Vue's `useId` if it's available.
-  // @ts-expect-error - `useId` doesn't exist in Vue < 3.5.
-  Vue.useId ??
-  function useId() {
-    let generateId = Vue.inject(GENERATE_ID, () => {
-      return `${++globalId}`
-    })
+export function useId() {
+  // Prefer explicitly provided ID generators (for SSR stability / framework integration).
+  let generateId = Vue.inject(GENERATE_ID, null)
+  if (generateId) return generateId()
 
-    return generateId()
-  }
+  // Fallback to Vue's built-in `useId` when available.
+  // @ts-ignore - `useId` doesn't exist in Vue < 3.5.
+  if (Vue.useId) return Vue.useId()
+
+  return `${++globalId}`
+}
 /**
  * This function allows users to provide a custom ID generator.
  */

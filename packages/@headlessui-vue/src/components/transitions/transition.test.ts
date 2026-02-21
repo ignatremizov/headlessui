@@ -58,7 +58,7 @@ it(
           <div class="hello">Children</div>
         </TransitionRoot>
       `,
-      errorCaptured(err) {
+      errorCaptured(err: unknown) {
         expect(err as Error).toEqual(
           new Error('A <Transition /> is used but it is missing a `:show="true | false"` prop.')
         )
@@ -138,7 +138,7 @@ describe('Setup API', () => {
               <TransitionChild>Oops</TransitionChild>
             </div>
           `,
-          errorCaptured(err) {
+          errorCaptured(err: unknown) {
             expect(err as Error).toEqual(
               new Error(
                 'A <TransitionChild /> is used but it is missing a parent <TransitionRoot />.'
@@ -263,7 +263,7 @@ describe('Setup API', () => {
               </TransitionRoot>
             </div>
           `,
-          errorCaptured(err) {
+          errorCaptured(err: unknown) {
             expect(err as Error).toEqual(
               new Error('Did you forget to passthrough the `ref` to the actual DOM node?')
             )

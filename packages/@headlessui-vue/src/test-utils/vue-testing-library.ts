@@ -1,6 +1,6 @@
 import { fireEvent, logDOM, screen } from '@testing-library/dom'
 import { mount } from '@vue/test-utils'
-import { defineComponent, type ComponentOptionsWithoutProps } from 'vue'
+import { defineComponent } from 'vue'
 
 let mountedWrappers = new Set()
 
@@ -17,14 +17,15 @@ function resolveContainer(): HTMLElement {
 // It's not the most elegant type
 // but Props and Emits need to be typed as any and not `{}`
 type AnyComponent = ReturnType<typeof defineComponent>
+type RenderTemplateInput = string | AnyComponent | Record<string, any>
 
 export function createRenderTemplate(defaultComponents: Record<string, AnyComponent>) {
-  return (input: string | ComponentOptionsWithoutProps) => {
+  return (input: RenderTemplateInput) => {
     if (typeof input === 'string') {
       input = { template: input }
     }
 
-    let component: ComponentOptionsWithoutProps = Object.assign({}, input, {
+    let component = Object.assign({}, input, {
       components: { ...defaultComponents, ...input.components },
     })
 

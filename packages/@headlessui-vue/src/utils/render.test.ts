@@ -32,7 +32,7 @@ describe('Validation', () => {
 
     renderTemplate({
       template: html` <Dummy as="template" class="abc">Contents</Dummy> `,
-      errorCaptured(err) {
+      errorCaptured(err: unknown) {
         expect(err as Error).toEqual(
           new Error(
             [
@@ -68,10 +68,10 @@ describe('Validation', () => {
   it('should forward the props via Functional Components', () => {
     renderTemplate({
       components: {
-        PassThrough(props, context) {
-          props.as = props.as ?? 'template'
+        PassThrough(props: any, context: any) {
+          let theirProps = { ...props, as: props.as ?? 'template' }
           return render({
-            theirProps: props,
+            theirProps,
             ourProps: {},
             attrs: context.attrs,
             slots: context.slots,

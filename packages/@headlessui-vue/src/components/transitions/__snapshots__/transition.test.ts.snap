@@ -270,6 +270,8 @@ Render 3: Transition took at least 50ms (yes)
 Render 4:
     -  class=\\"\\"
     +  class=\\"leave leave-from\\"
+    +  hidden=\\"\\"
+    +  style=\\"display: none;\\"
 
 Render 5:
     -  class=\\"leave leave-from\\"
@@ -278,8 +280,6 @@ Render 5:
 Render 6: Transition took at least 75ms (yes)
     -  class=\\"leave leave-to\\"
     +  class=\\"\\"
-    +  hidden=\\"\\"
-    +  style=\\"display: none;\\"
 
 Render 7:
     -  class=\\"\\"

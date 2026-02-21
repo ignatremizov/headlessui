@@ -169,7 +169,7 @@ describe('Rendering', () => {
                 </MenuItems>
               </Menu>
             `,
-          errorCaptured(err) {
+          errorCaptured(err: unknown) {
             expect(err as Error).toEqual(
               new Error(
                 [
@@ -338,7 +338,7 @@ describe('Rendering', () => {
               </MenuItems>
             </Menu>
           `,
-          errorCaptured(err) {
+          errorCaptured(err: unknown) {
             expect(err as Error).toEqual(
               new Error(
                 [
@@ -534,7 +534,7 @@ describe('Rendering', () => {
             </MenuItems>
           </Menu>
         `,
-        errorCaptured(err) {
+        errorCaptured(err: unknown) {
           expect(err as Error).toEqual(
             new Error(
               [
@@ -748,7 +748,7 @@ describe('Rendering', () => {
             </MenuItems>
           </Menu>
         `,
-        errorCaptured(err) {
+        errorCaptured(err: unknown) {
           expect(err as Error).toEqual(
             new Error(
               [

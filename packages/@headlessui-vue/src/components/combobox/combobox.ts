@@ -151,7 +151,7 @@ let VirtualProvider = defineComponent({
     })
 
     let virtualizer = useVirtualizer<HTMLDivElement, HTMLLIElement>(
-      // @ts-expect-error TODO: Drop when using `pnpm` and `@tanstack/virtual-vue`
+      // @ts-ignore TODO: Drop when using `pnpm` and `@tanstack/virtual-vue`
       // has been rolled back to the older version.
       computed(() => {
         return {
@@ -175,7 +175,7 @@ let VirtualProvider = defineComponent({
       baseKey.value += 1
     })
 
-    // @ts-expect-error TODO: Drop when using `pnpm` and `@tanstack/virtual-vue`
+    // @ts-ignore TODO: Drop when using `pnpm` and `@tanstack/virtual-vue`
     // has been rolled back to the older version.
     provide(VirtualContext, api.virtual.value ? virtualizer : null)
 
@@ -927,6 +927,7 @@ export let ComboboxInput = defineComponent({
     let ownerDocument = computed(() => getOwnerDocument(dom(api.inputRef)))
 
     let isTyping = { value: false }
+    let didChangeInput = ref(false)
 
     expose({ el: api.inputRef, $el: api.inputRef })
 
@@ -1028,6 +1029,10 @@ export let ComboboxInput = defineComponent({
       // TODO: VoiceOver is still relatively buggy if you start VoiceOver while the Combobox is
       // already in an open state.
       watch([api.comboboxState], ([newState], [oldState]) => {
+        if (newState === ComboboxStates.Closed) {
+          didChangeInput.value = false
+        }
+
         if (newState === ComboboxStates.Open && oldState === ComboboxStates.Closed) {
           // When the user is typing, we want to not touch the `input` at all. Especially when they
           // are using an IME, we don't want to mess with the input at all.
@@ -1192,6 +1197,8 @@ export let ComboboxInput = defineComponent({
     }
 
     function handleInput(event: Event & { target: HTMLInputElement }) {
+      didChangeInput.value = true
+
       // Always call the onChange listener even if the user is still typing using an IME (Input Method
       // Editor).
       //
@@ -1220,36 +1227,29 @@ export let ComboboxInput = defineComponent({
         (event.relatedTarget as HTMLElement) ?? history.find((x) => x !== event.currentTarget)
       isTyping.value = false
 
-      // Focus is moved into the list, we don't want to close yet.
-      if (dom(api.optionsRef)?.contains(relatedTarget)) {
-        return
-      }
-
-      if (dom(api.buttonRef)?.contains(relatedTarget)) {
-        return
-      }
+      // Preserve dropdown if focus moved within combobox (e.g., to options or button).
+      if (dom(api.optionsRef)?.contains(relatedTarget)) return
+      if (dom(api.buttonRef)?.contains(relatedTarget)) return
 
       if (api.comboboxState.value !== ComboboxStates.Open) return
       event.preventDefault()
 
       if (api.mode.value === ValueMode.Single) {
-        // We want to clear the value when the user presses escape if and only if the current
-        // value is not set (aka, they didn't select anything yet, or they cleared the input which
-        // caused the value to be set to `null`). If the current value is set, then we want to
-        // fallback to that value when we press escape (this part is handled in the watcher that
-        // syncs the value with the input field again).
+        // If nullable and user cleared the input, ensure value is cleared explicitly.
         if (api.nullable.value && api.value.value === null) {
           clear()
         }
 
-        // We do have a value, so let's select the active option, unless we were just going through
-        // the form and we opened it due to the focus event.
+        // Avoid unintended auto-selection when combobox opened on focus.
+        // Only select active option if the user typed a query.
         else if (api.activationTrigger.value !== ActivationTrigger.Focus) {
-          api.selectActiveOption()
+          if (didChangeInput.value) {
+            api.selectActiveOption()
+          }
         }
       }
 
-      return api.closeCombobox()
+      api.closeCombobox()
     }
 
     function handleFocus(event: FocusEvent) {

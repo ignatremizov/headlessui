@@ -851,7 +851,7 @@ describe('Rendering', () => {
               },
             }
           },
-          errorCaptured(err) {
+          errorCaptured(err: unknown) {
             expect(err as Error).toEqual(
               new Error(
                 'A <DialogBackdrop /> component is being used, but a <DialogPanel /> component is missing.'
