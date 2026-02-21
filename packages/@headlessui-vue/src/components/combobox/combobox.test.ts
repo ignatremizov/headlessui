@@ -398,23 +398,42 @@ describe('Rendering', () => {
         })
       )
 
-      it.skip(
+      it(
         'should be possible to use completely new objects while rendering (single mode)',
         suppressConsoleLogs(async () => {
           renderTemplate({
             template: html`
+              <div id="refresh" @click="refresh">Refresh</div>
               <Combobox v-model="value" by="id">
                 <ComboboxButton>Trigger</ComboboxButton>
                 <ComboboxOptions>
-                  <ComboboxOption :value="{ id: 1, name: 'alice' }">alice</ComboboxOption>
-                  <ComboboxOption :value="{ id: 2, name: 'bob' }">bob</ComboboxOption>
-                  <ComboboxOption :value="{ id: 3, name: 'charlie' }">charlie</ComboboxOption>
+                  <ComboboxOption v-for="option in options" :key="option.id" :value="option">
+                    {{ option.name }}
+                  </ComboboxOption>
                 </ComboboxOptions>
               </Combobox>
             `,
             setup: () => {
               let value = ref({ id: 2, name: 'Bob' })
-              return { options, value }
+              let version = ref(0)
+
+              let options = computed(() => {
+                version.value
+
+                return [
+                  { id: 1, name: 'alice' },
+                  { id: 2, name: 'bob' },
+                  { id: 3, name: 'charlie' },
+                ]
+              })
+
+              return {
+                options,
+                value,
+                refresh() {
+                  version.value += 1
+                },
+              }
             },
           })
 
@@ -424,7 +443,23 @@ describe('Rendering', () => {
           expect(bob).toHaveAttribute('aria-selected', 'true')
           expect(charlie).toHaveAttribute('aria-selected', 'false')
 
+          await click(getByText('Refresh'))
+          await nextTick()
+          await click(getComboboxButton())
+          ;[alice, bob, charlie] = getComboboxOptions()
+          expect(alice).toHaveAttribute('aria-selected', 'false')
+          expect(bob).toHaveAttribute('aria-selected', 'true')
+          expect(charlie).toHaveAttribute('aria-selected', 'false')
+
           await click(getComboboxOptions()[2])
+          await click(getComboboxButton())
+          ;[alice, bob, charlie] = getComboboxOptions()
+          expect(alice).toHaveAttribute('aria-selected', 'false')
+          expect(bob).toHaveAttribute('aria-selected', 'false')
+          expect(charlie).toHaveAttribute('aria-selected', 'true')
+
+          await click(getByText('Refresh'))
+          await nextTick()
           await click(getComboboxButton())
           ;[alice, bob, charlie] = getComboboxOptions()
           expect(alice).toHaveAttribute('aria-selected', 'false')
@@ -440,23 +475,42 @@ describe('Rendering', () => {
         })
       )
 
-      it.skip(
+      it(
         'should be possible to use completely new objects while rendering (multiple mode)',
         suppressConsoleLogs(async () => {
           renderTemplate({
             template: html`
+              <div id="refresh" @click="refresh">Refresh</div>
               <Combobox v-model="value" by="id" multiple>
                 <ComboboxButton>Trigger</ComboboxButton>
                 <ComboboxOptions>
-                  <ComboboxOption :value="{ id: 1, name: 'alice' }">alice</ComboboxOption>
-                  <ComboboxOption :value="{ id: 2, name: 'bob' }">bob</ComboboxOption>
-                  <ComboboxOption :value="{ id: 3, name: 'charlie' }">charlie</ComboboxOption>
+                  <ComboboxOption v-for="option in options" :key="option.id" :value="option">
+                    {{ option.name }}
+                  </ComboboxOption>
                 </ComboboxOptions>
               </Combobox>
             `,
             setup: () => {
               let value = ref([{ id: 2, name: 'Bob' }])
-              return { options, value }
+              let version = ref(0)
+
+              let options = computed(() => {
+                version.value
+
+                return [
+                  { id: 1, name: 'alice' },
+                  { id: 2, name: 'bob' },
+                  { id: 3, name: 'charlie' },
+                ]
+              })
+
+              return {
+                options,
+                value,
+                refresh() {
+                  version.value += 1
+                },
+              }
             },
           })
 
@@ -464,6 +518,14 @@ describe('Rendering', () => {
 
           await click(getComboboxOptions()[2])
           let [alice, bob, charlie] = getComboboxOptions()
+          expect(alice).toHaveAttribute('aria-selected', 'false')
+          expect(bob).toHaveAttribute('aria-selected', 'true')
+          expect(charlie).toHaveAttribute('aria-selected', 'true')
+
+          await click(getByText('Refresh'))
+          await nextTick()
+          await click(getComboboxButton())
+          ;[alice, bob, charlie] = getComboboxOptions()
           expect(alice).toHaveAttribute('aria-selected', 'false')
           expect(bob).toHaveAttribute('aria-selected', 'true')
           expect(charlie).toHaveAttribute('aria-selected', 'true')
