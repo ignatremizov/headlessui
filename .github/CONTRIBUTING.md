@@ -22,11 +22,33 @@ The Headless UI repo is a monorepo using `npm` workspaces.
 
 ## Installation
 
-You only require a `npm install` in the root directory to install everything you need.
+Use the Node version in `.nvmrc` and npm `12.2.1`, pinned in the root `packageManager` field. Install from the workspace root:
 
 ```sh
-npm install
+npm ci
 ```
+
+CI and release jobs bootstrap that npm version with `--ignore-scripts`, then run an ordinary `npm ci` under the reviewed project policy. Do not use a blanket script bypass for project installation. The workflows use `actions/setup-node@v6`, whose registry authentication file no longer contains the removed `always-auth` option rejected by strict npmrc validation. Automatic action caching is disabled because the existing explicit dependency cache already includes the toolchain, policy, manifest, and lockfile.
+
+### Dependency installation policy
+
+The root `allowScripts` field owns install-script permissions for all workspaces. Approvals are exact registry package versions; workspace manifests do not override them. The root `.npmrc` rejects unreviewed lifecycle scripts, unknown npmrc keys, Git dependencies, and non-registry remote tarball URLs. Local workspace links remain supported.
+
+| Locked package          | Decision and purpose                                                                         |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| `@parcel/watcher@2.6.0` | Allow the explicit native source-build hook. Normal prebuilt installs do not compile.        |
+| `@swc/core@1.16.18`     | Allow native-binding validation and the upstream fallback installer.                         |
+| `esbuild@0.28.2`        | Allow binary selection, integrity checks, and version validation.                            |
+| `husky@4.3.8`           | Allow existing maintainer Git-hook installation and the upstream funding message.            |
+| `unrs-resolver@1.12.2`  | Allow native-binding preparation and the upstream fallback installer.                        |
+| `vue-demi@0.14.10`      | Allow selection of the installed Vue version's compatibility shim.                           |
+| `fsevents@2.3.3`        | Deny an unnecessary native rebuild; the optional Darwin archive already includes its binary. |
+
+Native installers may fetch their upstream platform fallback when optional binaries are missing. Keep optional dependencies installed. These approvals are not a network sandbox. On shared worktrees, use `HUSKY_SKIP_INSTALL=1 npm ci` to avoid replacing shared Git hooks; normal maintainer installs retain the existing Husky behavior.
+
+When upgrading a dependency with lifecycle scripts, inspect its actual locked script and helpers, update the exact approval or denial, and rerun `npm run test:npm-policy` and the normal validation gates. Use `npm install-scripts ls --json` to inspect pending decisions. Do not approve all scripts or add broad source permissions to clear an install error. Unknown user/global npmrc settings must be reviewed by their owner; do not disable `strict-npmrc` to hide them. Unknown or abbreviated CLI flags are errors under npm 12; use supported full flags and `--` when forwarding script arguments.
+
+`npm run test:npm-policy` runs offline fixtures proving unknown/approved/denied behavior, source identity boundaries, root ownership from workspace directories, and strict config validation. It also checks the actual Husky installer and generated hook in an isolated Git repository, release helper argument forwarding, and workspace version/pack preparation without publishing.
 
 ## Coding standards
 

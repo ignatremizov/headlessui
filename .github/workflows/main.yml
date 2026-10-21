@@ -17,15 +17,16 @@ jobs:
       - name: Begin CI...
         uses: actions/checkout@v4
       - name: Use repository Node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Use repository npm version
-        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+        run: npm install --global --ignore-scripts "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', '.npmrc', 'package.json', 'package-lock.json') }}
       - name: Install dependencies
         run: npm ci
         env:
@@ -39,15 +40,16 @@ jobs:
       - name: Begin CI...
         uses: actions/checkout@v4
       - name: Use repository Node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Use repository npm version
-        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+        run: npm install --global --ignore-scripts "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', '.npmrc', 'package.json', 'package-lock.json') }}
       - name: Build formatting plugin
         run: npm run build --workspace=@headlessui/tailwindcss
       - name: Lint
@@ -63,15 +65,18 @@ jobs:
       - name: Begin CI...
         uses: actions/checkout@v4
       - name: Use repository Node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Use repository npm version
-        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+        run: npm install --global --ignore-scripts "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', '.npmrc', 'package.json', 'package-lock.json') }}
+      - name: Test npm install policy
+        run: npm run test:npm-policy
       - name: Test
         run: |
           npm run test || npm run test || npm run test || exit 1
@@ -86,15 +91,16 @@ jobs:
       - name: Begin CI...
         uses: actions/checkout@v4
       - name: Use repository Node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Use repository npm version
-        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+        run: npm install --global --ignore-scripts "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', '.npmrc', 'package.json', 'package-lock.json') }}
       - name: Build
         run: npm run build
         env:
@@ -108,15 +114,16 @@ jobs:
       - name: Begin CI...
         uses: actions/checkout@v4
       - name: Use repository Node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Use repository npm version
-        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+        run: npm install --global --ignore-scripts "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', '.npmrc', 'package.json', 'package-lock.json') }}
       - name: Check Types
         run: npm run lint-types
         env:
