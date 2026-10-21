@@ -29,7 +29,6 @@ import {
 import {
   Keys,
   MouseButton,
-  blur,
   click,
   focus,
   mouseLeave,
@@ -549,17 +548,20 @@ describe('Rendering', () => {
         ]
 
         render(
-          <Combobox<(typeof data)[number]> name="assignee" by="id" onClose={closeHandler}>
-            <Combobox.Input onChange={NOOP} />
-            <Combobox.Button />
-            <Combobox.Options>
-              {data.map((person) => (
-                <Combobox.Option key={person.id} value={person}>
-                  {person.label}
-                </Combobox.Option>
-              ))}
-            </Combobox.Options>
-          </Combobox>
+          <>
+            <Combobox<(typeof data)[number]> name="assignee" by="id" onClose={closeHandler}>
+              <Combobox.Input onChange={NOOP} />
+              <Combobox.Button />
+              <Combobox.Options>
+                {data.map((person) => (
+                  <Combobox.Option key={person.id} value={person}>
+                    {person.label}
+                  </Combobox.Option>
+                ))}
+              </Combobox.Options>
+            </Combobox>
+            <button>Outside</button>
+          </>
         )
 
         // Open the combobox
@@ -570,7 +572,10 @@ describe('Rendering', () => {
 
         // Close the combobox
         expect(closeHandler).toHaveBeenCalledTimes(0)
-        await blur(getComboboxInput())
+        await focus(getComboboxInput())
+        assertActiveElement(getComboboxInput())
+        // Move focus outside explicitly; blur() alone has no destination in modern JSDOM.
+        await focus(getByText('Outside'))
         expect(closeHandler).toHaveBeenCalledTimes(1)
 
         // Verify it is closed
@@ -2883,9 +2888,9 @@ describe.each([{ virtual: true }, { virtual: false }])(
               return (
                 <form
                   onKeyUp={(event) => {
-                    // JSDom doesn't automatically submit the form but if we can
-                    // catch an `Enter` event, we can assume it was a submit.
-                    if (event.key === 'Enter') event.currentTarget.submit()
+                    // JSDOM does not implement implicit Enter submission. Request a submission
+                    // so validation and the submit event still follow the browser contract.
+                    if (event.key === 'Enter') event.currentTarget.requestSubmit()
                   }}
                   onSubmit={(event) => {
                     event.preventDefault()
@@ -2924,9 +2929,9 @@ describe.each([{ virtual: true }, { virtual: false }])(
               return (
                 <form
                   onKeyUp={(event) => {
-                    // JSDom doesn't automatically submit the form but if we can
-                    // catch an `Enter` event, we can assume it was a submit.
-                    if (event.key === 'Enter') event.currentTarget.submit()
+                    // JSDOM does not implement implicit Enter submission. Request a submission
+                    // so validation and the submit event still follow the browser contract.
+                    if (event.key === 'Enter') event.currentTarget.requestSubmit()
                   }}
                   onSubmit={(event) => {
                     event.preventDefault()

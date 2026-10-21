@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`should be possible to use useDescriptions and a single Description, and have them linked 1`] = `"<div><div aria-describedby=\\"headlessui-description-1\\"><p id=\\"headlessui-description-1\\">I am a description</p><span>Contents</span></div></div>"`;
 

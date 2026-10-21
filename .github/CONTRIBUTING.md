@@ -14,8 +14,7 @@ Thanks for your interest in contributing to Headless UI! Please take a moment to
 
 **Please ask first before starting work on any significant new features.**
 
-It's never a fun experience to have your pull request declined after investing a lot of time and effort into a new feature. To avoid this from happening, we request that contributors create [an issue](https://github.com/tailwindlabs/headlessui/issues) to first discuss any significant new features. This includes things like adding new components, exposing internal information, etc.
-Also make sure that you are making changes to both the `React` and `Vue` versions so that we can ensure feature parity.
+It's never a fun experience to have your pull request declined after investing a lot of time and effort into a new feature. To avoid this from happening, we request that contributors create [an issue](https://github.com/tailwindlabs/headlessui/issues) to first discuss any significant new features. This includes things like adding new components, exposing internal information, etc. Also make sure that you are making changes to both the `React` and `Vue` versions so that we can ensure feature parity.
 
 ## Monorepo
 
@@ -31,15 +30,13 @@ npm install
 
 ## Coding standards
 
-We use `prettier` for making sure that the codebase is formatted consistently.
-To automatically fix any style violations in your code, you can run:
+We use `prettier` for making sure that the codebase is formatted consistently. To automatically fix any style violations in your code, you can run:
 
 ```sh
 npm lint
 ```
 
-**Note**: Whenever you commit, the lint check will run on all staged files.
-**Note**: In CI, we will only check your code, and not write with the formatted files. If you want to just check, then you can either run `npm run lint-check` or `CI=true npm run lint`
+**Note**: Whenever you commit, the lint check will run on all staged files. **Note**: In CI, we will only check your code, and not write with the formatted files. If you want to just check, then you can either run `npm run lint-check` or `CI=true npm run lint`
 
 ## Running tests
 
@@ -60,6 +57,20 @@ npm run vue test
 ```
 
 Please ensure that the tests are passing when submitting a pull request. If you're adding new features to Headless UI, please include tests.
+
+### Test runner and coverage
+
+The repository uses Jest 30 and its supported JSDOM 26 environment. Tests retain the existing snapshot format; Jest may update generated snapshot documentation links without changing the expected values. DOM timeline tests use `jest-diff` directly, rather than a second Jest version through `snapshot-diff`.
+
+Run the complete suite with V8 coverage using:
+
+```sh
+npm test -- --maxWorkers=2 --coverage
+```
+
+The interaction helpers advance timeout timers while keeping the immediate, animation-frame, and microtask queues real so rendering and focus changes can settle. The shared setup exposes Node's native immediate APIs, which are no longer provided by the JSDOM environment. Browser interactions should identify focus destinations explicitly, and implicit form-submission test helpers should use `requestSubmit()` to dispatch a real submit event.
+
+Jest's transform dependency still includes the NYC configuration loader, even with V8 coverage. The narrow `@istanbuljs/load-nyc-config` override selects the maintained `js-yaml` 4 parser through the loader's supported `load()` API. The harness project tests valid YAML, relative extensions, JSON, CommonJS, parse failures, and executable-tag rejection against that actual dependency. Do not add removed-parser API aliases to make coverage tools appear compatible.
 
 ## Running playgrounds
 

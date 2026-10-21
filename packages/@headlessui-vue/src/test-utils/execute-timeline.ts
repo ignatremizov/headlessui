@@ -1,4 +1,4 @@
-import snapshotDiff from 'snapshot-diff'
+import { diff } from 'jest-diff'
 import { defineComponent } from 'vue'
 import { disposables } from '../utils/disposables'
 import { reportChanges } from './report-dom-node-changes'
@@ -115,16 +115,21 @@ export async function executeTimeline(
                 : `no, it took ${call.relativeToPreviousSnapshot}ms`
             })`
       }\n${redentSnapshot(
-        snapshotDiff(uniqueSnapshots[i - 1].content, call.content, {
+        diff(uniqueSnapshots[i - 1].content, call.content, {
           aAnnotation: '__REMOVE_ME__',
           bAnnotation: '__REMOVE_ME__',
           contextLines: 0,
-        })
+          expand: false,
+          aColor: (value) => value,
+          bColor: (value) => value,
+          changeColor: (value) => value,
+          commonColor: (value) => value,
+          patchColor: (value) => value,
+        })!
           // Just to do some cleanup
           .replace(/\n\n@@([^@@]*)@@/g, '') // Top level @@ signs
           .replace(/@@([^@@]*)@@/g, '---') // In between @@ signs
           .replace(/[-+] __REMOVE_ME__\n/g, '')
-          .replace(/Snapshot Diff:\n/g, '')
       )
         .split('\n')
         .map((line) => `    ${line}`)

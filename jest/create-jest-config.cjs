@@ -3,6 +3,24 @@ module.exports = function createJestConfig(root, options) {
   return Object.assign(
     {
       rootDir: root,
+      testEnvironment: 'jsdom',
+      testEnvironmentOptions: {
+        customExportConditions: ['node', 'node-addons'],
+      },
+      snapshotFormat: {
+        escapeString: true,
+        printBasicPrototype: true,
+      },
+      fakeTimers: {
+        // Preserve the existing interaction helpers' timeout and real rendering-queue semantics.
+        doNotFake: [
+          'setImmediate',
+          'clearImmediate',
+          'requestAnimationFrame',
+          'cancelAnimationFrame',
+          'queueMicrotask',
+        ],
+      },
       setupFilesAfterEnv: [
         '<rootDir>../../jest/custom-matchers.ts',
         '<rootDir>../../jest/polyfills.ts',
