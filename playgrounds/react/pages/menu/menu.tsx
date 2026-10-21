@@ -15,7 +15,7 @@ export function ExampleMenu() {
   return (
     <div className="relative inline-block text-left">
       <Menu>
-        <span className="shadow-xs rounded-md">
+        <span className="rounded-md shadow-xs">
           <Menu.Button as={Button}>
             <span>Options</span>
             <svg
@@ -34,11 +34,11 @@ export function ExampleMenu() {
 
         <Menu.Items
           anchor="bottom start"
-          className="outline-hidden z-50 w-56 divide-y divide-gray-100 rounded-md border border-gray-200 bg-white shadow-lg [--anchor-gap:--spacing(1)]"
+          className="z-50 w-56 divide-y divide-gray-100 rounded-md border border-gray-200 bg-white shadow-lg outline-hidden [--anchor-gap:--spacing(1)]"
         >
           <div className="px-4 py-3">
             <p className="text-sm leading-5">Signed in as</p>
-            <p className="truncate text-sm font-medium leading-5 text-gray-900">tom@example.com</p>
+            <p className="truncate text-sm leading-5 font-medium text-gray-900">tom@example.com</p>
           </div>
 
           <div className="py-1">

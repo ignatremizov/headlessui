@@ -37,7 +37,7 @@
     "watch": "../../scripts/watch.sh --external:vue",
     "test": "../../scripts/test.sh",
     "lint": "../../scripts/lint.sh",
-    "lint-types": "npm run attw -P --workspaces --if-present",
+    "lint-types": "tsc --noEmit",
     "playground": "npm run dev --workspace=playground-vue",
     "clean": "rimraf ./dist"
   },
@@ -46,9 +46,9 @@
   },
   "devDependencies": {
     "@testing-library/vue": "8.0.0",
-    "@vue/compiler-dom": "3.5.28",
-    "@vue/test-utils": "^2.4.1",
-    "vue": "3.5.28"
+    "@vue/compiler-dom": "3.5.44",
+    "@vue/test-utils": "^2.5.1",
+    "vue": "3.5.44"
   },
   "dependencies": {
     "@tanstack/vue-virtual": "3.13.6"

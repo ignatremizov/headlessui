@@ -37,7 +37,7 @@
     "watch": "../../scripts/watch.sh --external:react --external:react-dom --external:use-sync-external-store",
     "test": "../../scripts/test.sh",
     "lint": "../../scripts/lint.sh",
-    "lint-types": "npm run attw -P --workspaces --if-present",
+    "lint-types": "tsc --noEmit",
     "playground": "npm run dev --workspace=playground-react",
     "clean": "rimraf ./dist"
   },
@@ -56,10 +56,10 @@
     "snapshot-diff": "^0.10.0"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.26.16",
-    "@react-aria/focus": "^3.20.2",
-    "@react-aria/interactions": "^3.25.0",
-    "@tanstack/react-virtual": "^3.13.9",
+    "@floating-ui/react": "0.26.16",
+    "@react-aria/focus": "3.20.2",
+    "@react-aria/interactions": "3.25.0",
+    "@tanstack/react-virtual": "3.13.9",
     "use-sync-external-store": "^1.5.0"
   }
 }

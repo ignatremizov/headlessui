@@ -2211,8 +2211,8 @@ describe('Keyboard interactions', () => {
         // Verify we restored the Open button
         assertActiveElement(getPopoverButton())
 
-        // Verify that we got redirected to the href
-        expect(document.location.hash).toEqual('#closed')
+        // JSDOM schedules anchor navigation separately from React's updates.
+        await waitFor(() => expect(document.location.hash).toEqual('#closed'))
       })
     )
   })
