@@ -6,7 +6,16 @@
   "repository": "https://github.com/tailwindlabs/headlessui",
   "license": "MIT",
   "private": true,
-  "packageManager": "npm@11.21.1",
+  "packageManager": "npm@12.2.1",
+  "allowScripts": {
+    "@parcel/watcher@2.6.0": true,
+    "@swc/core@1.16.18": true,
+    "esbuild@0.28.2": true,
+    "fsevents@2.3.3": false,
+    "husky@4.3.8": true,
+    "unrs-resolver@1.12.2": true,
+    "vue-demi@0.14.10": true
+  },
   "workspaces": [
     "packages/*",
     "playgrounds/*"
@@ -21,6 +30,7 @@
     "clean": "npm run clean --workspaces --if-present",
     "build": "npm-run-all -p 'react build' 'vue build'",
     "test": "./scripts/test.sh",
+    "test:npm-policy": "node --test scripts/test-npm-policy.mjs",
     "lint": "./scripts/lint.sh",
     "lint-check": "CI=true ./scripts/lint.sh",
     "lint-types": "CI=true npm run lint-types --workspaces --if-present",

@@ -22,12 +22,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use repository Node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
           registry-url: 'https://registry.npmjs.org'
       - name: Use repository npm version
-        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+        run: npm install --global --ignore-scripts "$(node -p 'require("./package.json").packageManager')"
 
       - run: git fetch --tags -f
 
