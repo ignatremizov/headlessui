@@ -1,4 +1,9 @@
 import { mockAnimationsApi, mockResizeObserver } from 'jsdom-testing-mocks'
+import { clearImmediate, setImmediate } from 'node:timers'
+
+// The interaction helpers use Node's immediate queue to flush rendering between events.
+// Modern JSDOM environments no longer expose these Node APIs on their global object.
+Object.assign(globalThis, { clearImmediate, setImmediate })
 
 mockAnimationsApi() // `Element.prototype.getAnimations` and `CSSTransition` polyfill
 mockResizeObserver() // `ResizeObserver` polyfill
