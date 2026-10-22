@@ -9,9 +9,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
-env:
-  NODE_VERSION: 18.x
-
 jobs:
   install:
     runs-on: ubuntu-latest
@@ -19,14 +16,16 @@ jobs:
     steps:
       - name: Begin CI...
         uses: actions/checkout@v4
-      - name: Use Node ${{ env.NODE_VERSION }}
+      - name: Use repository Node version
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version-file: .nvmrc
+      - name: Use repository npm version
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
       - name: Install dependencies
         run: npm ci
         env:
@@ -39,10 +38,18 @@ jobs:
     steps:
       - name: Begin CI...
         uses: actions/checkout@v4
+      - name: Use repository Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Use repository npm version
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
+      - name: Build formatting plugin
+        run: npm run build --workspace=@headlessui/tailwindcss
       - name: Lint
         run: npm run lint
         env:
@@ -55,10 +62,16 @@ jobs:
     steps:
       - name: Begin CI...
         uses: actions/checkout@v4
+      - name: Use repository Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Use repository npm version
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
       - name: Test
         run: |
           npm run test || npm run test || npm run test || exit 1
@@ -72,10 +85,16 @@ jobs:
     steps:
       - name: Begin CI...
         uses: actions/checkout@v4
+      - name: Use repository Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Use repository npm version
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
       - name: Build
         run: npm run build
         env:
@@ -88,10 +107,16 @@ jobs:
     steps:
       - name: Begin CI...
         uses: actions/checkout@v4
+      - name: Use repository Node version
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Use repository npm version
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
       - uses: actions/cache@v4
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-${{ env.NODE_VERSION }}-modules-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-modules-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
       - name: Check Types
         run: npm run lint-types
         env:

@@ -1,3 +1,6 @@
+// Copyright © 2026 Zolvat Ltd
+
+import { execFileSync } from 'child_process'
 import path from 'path'
 import postcss from 'postcss'
 import tailwind from 'tailwindcss'
@@ -80,4 +83,34 @@ describe('custom prefix', () => {
       expect(result.css).toMatchSnapshot()
     })
   })
+})
+
+it('preserves typography selectors with the patched selector parser', () => {
+  // Exercise Node's package-exports support, which Jest 26's resolver does not implement.
+  let css = execFileSync(
+    process.execPath,
+    [
+      '-e',
+      `
+        const postcss = require('postcss')
+        const tailwind = require('tailwindcss')
+        const typography = require('@tailwindcss/typography')
+        const config = {
+          content: [{ raw: '<article class="prose prose-headings:underline"></article>' }],
+          plugins: [typography],
+        }
+        postcss(tailwind(config))
+          .process('@tailwind components; @tailwind utilities', { from: undefined })
+          .then((result) => process.stdout.write(result.css))
+          .catch((error) => { console.error(error); process.exitCode = 1 })
+      `,
+    ],
+    { cwd: path.resolve(__dirname, '..'), encoding: 'utf8' }
+  )
+
+  expect(css).toContain('.prose {')
+  expect(css).toContain(':where(h1)')
+  expect(css).toContain('[class~="not-prose"]')
+  expect(css).toContain('.prose-headings\\:underline')
+  expect(css).toContain('text-decoration-line: underline')
 })

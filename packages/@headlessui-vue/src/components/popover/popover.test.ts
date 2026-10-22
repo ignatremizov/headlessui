@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/dom'
 import { defineComponent, h, nextTick, onMounted, ref, watch } from 'vue'
 import { createRenderTemplate, render } from '../../test-utils/vue-testing-library'
 
@@ -2043,8 +2044,8 @@ describe('Keyboard interactions', () => {
         // Verify we restored the Open button
         assertActiveElement(getPopoverButton())
 
-        // Verify that we got redirected to the href
-        expect(document.location.hash).toEqual('#closed')
+        // JSDOM schedules anchor navigation separately from Vue's updates.
+        await waitFor(() => expect(document.location.hash).toEqual('#closed'))
       })
     )
   })

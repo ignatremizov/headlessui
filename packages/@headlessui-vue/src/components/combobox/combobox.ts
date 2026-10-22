@@ -1,5 +1,4 @@
-import type { Virtualizer } from '@tanstack/virtual-core'
-import { useVirtualizer } from '@tanstack/vue-virtual'
+import { useVirtualizer, type Virtualizer } from '@tanstack/vue-virtual'
 import {
   Fragment,
   cloneVNode,
