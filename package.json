@@ -9,7 +9,7 @@
   "packageManager": "npm@12.2.1",
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
-    "@swc/core@1.16.18": true,
+    "@swc/core@1.16.20": true,
     "esbuild@0.28.2": true,
     "fsevents@2.3.3": false,
     "husky@4.3.8": true,
