@@ -37,7 +37,7 @@ The root `allowScripts` field owns install-script permissions for all workspaces
 | Locked package          | Decision and purpose                                                                         |
 | ----------------------- | -------------------------------------------------------------------------------------------- |
 | `@parcel/watcher@2.6.0` | Allow the explicit native source-build hook. Normal prebuilt installs do not compile.        |
-| `@swc/core@1.16.18`     | Allow native-binding validation and the upstream fallback installer.                         |
+| `@swc/core@1.16.20`     | Allow native-binding validation and the upstream fallback installer.                         |
 | `esbuild@0.28.2`        | Allow binary selection, integrity checks, and version validation.                            |
 | `husky@4.3.8`           | Allow existing maintainer Git-hook installation and the upstream funding message.            |
 | `unrs-resolver@1.12.2`  | Allow native-binding preparation and the upstream fallback installer.                        |
