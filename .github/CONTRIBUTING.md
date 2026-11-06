@@ -22,7 +22,7 @@ The Headless UI repo is a monorepo using `npm` workspaces.
 
 ## Installation
 
-Use the Node version in `.nvmrc` and npm `12.2.1`, pinned in the root `packageManager` field. Install from the workspace root:
+Use the Node version in `.nvmrc` and npm `12.2.2`, pinned in the root `packageManager` field. Install from the workspace root:
 
 ```sh
 npm ci
