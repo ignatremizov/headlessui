@@ -6,7 +6,7 @@
   "repository": "https://github.com/tailwindlabs/headlessui",
   "license": "MIT",
   "private": true,
-  "packageManager": "npm@12.2.1",
+  "packageManager": "npm@12.2.2",
   "allowScripts": {
     "@parcel/watcher@2.6.0": true,
     "@swc/core@1.16.20": true,
